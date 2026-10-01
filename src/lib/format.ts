@@ -1,12 +1,10 @@
-const thb = new Intl.NumberFormat("th-TH", {
-  style: "currency",
-  currency: "THB",
-  maximumFractionDigits: 0,
-});
+const thb = new Intl.NumberFormat("th-TH", { style: "currency", currency: "THB", maximumFractionDigits: 0 });
+const thbSatang = new Intl.NumberFormat("th-TH", { style: "currency", currency: "THB", minimumFractionDigits: 2 });
 
-/** ฿12,345 — accepts Prisma Decimal, number, or numeric string. */
+/** ฿12,345 or ฿1,500.50 — never rounds away satang. Accepts Prisma Decimal, number, or numeric string. */
 export function formatBaht(value: { toString(): string } | number | null | undefined): string {
-  return thb.format(Number(value ?? 0));
+  const n = Number(value ?? 0);
+  return Number.isInteger(n) ? thb.format(n) : thbSatang.format(n);
 }
 
 const thaiDate = new Intl.DateTimeFormat("th-TH", {
@@ -23,4 +21,9 @@ export function formatThaiDate(date: Date | null | undefined): string {
 /** "0935826662" — for tel: links. */
 export function telHref(phone: string): string {
   return `tel:${phone.replace(/[^\d+]/g, "")}`;
+}
+
+/** Short, human-friendly donation reference shown to the donor and searchable by admins. */
+export function donationReference(id: string): string {
+  return `MSB-${id.slice(-8).toUpperCase()}`;
 }

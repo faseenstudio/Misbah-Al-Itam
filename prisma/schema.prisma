@@ -102,9 +102,9 @@ model Donation {
   amount        Decimal  @db.Decimal(12, 2)
   transferredAt DateTime // date/time shown on the e-Slip
 
-  // e-Slip file in object storage (Supabase Storage / Cloudinary)
-  slipUrl        String
-  slipStorageKey String // path or public_id, used for deletion / signed URLs
+  // e-Slip in a PRIVATE storage bucket. Never stored as a public URL —
+  // admins view it through short-lived signed URLs generated from this key.
+  slipStorageKey String @unique
 
   // Review workflow
   status       DonationStatus @default(PENDING)

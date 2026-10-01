@@ -26,7 +26,23 @@ npm run dev
 | `npm run db:deploy` | Apply migrations in production |
 | `npm run db:seed` | Upsert funds, featured project, and admin user |
 | `npm run db:studio` | Browse data in Prisma Studio |
+| `npm run storage:setup` | Create the Supabase Storage buckets (one time) |
 | `npm run typecheck` / `npm run lint` | Static checks |
+
+## e-Slip storage (Supabase)
+
+Donor slips contain personal bank details, so they live in a **private** bucket and are only
+ever viewed by admins through short-lived signed URLs. The database stores only the storage key.
+
+1. In `.env`, set `SUPABASE_URL` (already in `.env.example`) and `SUPABASE_SERVICE_ROLE_KEY`
+   (Supabase → Project Settings → API Keys → `service_role` / secret key). This key is
+   server-only: never prefix it with `NEXT_PUBLIC_` and never commit it.
+2. Run `npm run storage:setup` once. It creates the private `slips` bucket (images only, 5 MB max)
+   and the public `media` bucket for activity photos.
+
+Without Supabase credentials, development stores slips in `.data/slips/` (git-ignored).
+A production build refuses to start uploads without Supabase unless `SLIP_STORAGE=local` is set
+explicitly (for a single-server deployment with a persistent disk).
 
 ## Project structure
 
@@ -41,6 +57,8 @@ src/
   components/ui/       # shadcn/ui primitives
   generated/prisma/    # generated Prisma client (git-ignored)
   lib/
+    storage.ts         # private e-Slip storage (Supabase, or local disk in dev)
+    validation/        # zod schemas shared by forms and Server Actions
     constants.ts       # foundation info + fund definitions (single source of truth)
     prisma.ts          # PrismaClient singleton (server-only)
     utils.ts           # cn() helper
