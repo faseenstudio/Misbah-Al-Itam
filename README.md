@@ -44,6 +44,20 @@ Without Supabase credentials, development stores slips in `.data/slips/` (git-ig
 A production build refuses to start uploads without Supabase unless `SLIP_STORAGE=local` is set
 explicitly (for a single-server deployment with a persistent disk).
 
+## Admin panel
+
+Sign in at `/admin` with the account created by `npm run db:seed` (`SEED_ADMIN_EMAIL` /
+`SEED_ADMIN_PASSWORD`). Change that password before going live.
+
+| Role | Can do |
+| --- | --- |
+| `SUPER_ADMIN`, `ADMIN` | Dashboard, review e-Slips (approve / reject / reopen), view slips |
+| `EDITOR` | Dashboard totals only (content management comes next) |
+
+Every admin page, Server Action and the slip route re-checks the session and role against the
+database (`src/lib/dal.ts`); `src/proxy.ts` only does a fast cookie check. Set `AUTH_URL` to the
+site's public address and a strong `AUTH_SECRET` (`npx auth secret`).
+
 ## Project structure
 
 ```
