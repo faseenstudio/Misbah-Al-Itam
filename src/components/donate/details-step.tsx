@@ -100,7 +100,14 @@ export function DetailsStep({
   const err = (field: DonationField) => errors[field];
 
   return (
-    <form noValidate onSubmit={onSubmit} className="flex flex-col gap-6">
+    <form noValidate onSubmit={onSubmit} className="relative flex flex-col gap-6">
+      {/* Honeypot for bots — invisible and unreachable for people and screen readers */}
+      <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+        <label>
+          Website
+          <input type="text" name="website" tabIndex={-1} autoComplete="off" defaultValue="" />
+        </label>
+      </div>
       {/* Selected fund summary */}
       <div className="flex items-center gap-3 rounded-xl border bg-accent/50 p-4">
         <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary text-secondary">

@@ -64,6 +64,20 @@ Every admin page, Server Action and the slip route re-checks the session and rol
 database (`src/lib/dal.ts`); `src/proxy.ts` only does a fast cookie check. Set `AUTH_URL` to the
 site's public address and a strong `AUTH_SECRET` (`npx auth secret`).
 
+## Abuse protection
+
+Fixed-window counters in Postgres (`rate_limits` table), so limits hold across server instances:
+
+| Where | Limit |
+| --- | --- |
+| Donation form | 10 per 10 minutes and 50 per day, per client IP |
+| Admin login | 20 attempts / 15 min per IP, 8 attempts / 15 min per email |
+
+IPs and emails are stored only as HMAC hashes (keyed by `AUTH_SECRET`) and expired rows are pruned
+automatically. The donation form also has a hidden honeypot field: bots that fill it get a fake
+"success" and nothing is saved. Behind a CDN or reverse proxy, make sure it sets
+`X-Forwarded-For` (otherwise every visitor looks like the same IP).
+
 ## Project structure
 
 ```

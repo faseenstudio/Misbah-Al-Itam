@@ -146,6 +146,8 @@ export function DonationWizard({ funds, initialFundId }: { funds: DonateFund[]; 
     formData.set("transferredAt", parsed.data.transferredAt.toISOString());
     formData.set("message", values.message);
     formData.set("slip", parsed.data.slip);
+    const honeypot = e.currentTarget.elements.namedItem("website");
+    formData.set("website", honeypot instanceof HTMLInputElement ? honeypot.value : "");
 
     startTransition(async () => {
       try {

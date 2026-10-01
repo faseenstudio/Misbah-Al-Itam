@@ -1,9 +1,15 @@
-import NextAuth from "next-auth";
+import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 
 import { prisma } from "@/lib/prisma";
+import { LOGIN_EMAIL_LIMIT, LOGIN_IP_LIMIT, clientIp, hit } from "@/lib/rate-limit";
+
+/** Thrown when too many sign-in attempts come from one IP or target one account. */
+export class LoginRateLimited extends CredentialsSignin {
+  code = "rate_limited";
+}
 
 const credentialsSchema = z.object({
   email: z.email().transform((v) => v.toLowerCase()),
@@ -21,10 +27,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
       credentials: { email: {}, password: {} },
-      async authorize(raw) {
+      async authorize(raw, request) {
         const parsed = credentialsSchema.safeParse(raw);
         if (!parsed.success) return null;
         const { email, password } = parsed.data;
+
+        // Limited here (not only in the login form) so direct calls to the auth endpoint count too.
+        const ipOk = await hit(clientIp(request.headers), [LOGIN_IP_LIMIT]);
+        const emailOk = await hit(email, [LOGIN_EMAIL_LIMIT]);
+        if (!ipOk || !emailOk) throw new LoginRateLimited();
 
         const user = await prisma.user.findUnique({ where: { email } });
         const ok = await bcrypt.compare(password, user?.passwordHash ?? DUMMY_HASH);

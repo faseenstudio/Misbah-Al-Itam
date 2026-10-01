@@ -2,6 +2,7 @@
 
 import { donationReference } from "@/lib/format";
 import { prisma } from "@/lib/prisma";
+import { DONATION_LIMITS, currentClientIp, hit } from "@/lib/rate-limit";
 import { deleteSlip, sniffImageType, uploadSlip } from "@/lib/storage";
 import {
   donationSchema,
@@ -17,6 +18,14 @@ function text(formData: FormData, key: string): string {
 }
 
 export async function submitDonation(formData: FormData): Promise<SubmitDonationResult> {
+  // Honeypot: a field humans never see. Bots that fill it get a fake success and nothing is stored.
+  if (text(formData, "website") !== "") {
+    return { ok: true, reference: donationReference(crypto.randomUUID().replace(/-/g, "")) };
+  }
+  if (!(await hit(await currentClientIp(), DONATION_LIMITS))) {
+    return { ok: false, formError: "ส่งข้อมูลบ่อยเกินไป กรุณารอสักครู่แล้วลองใหม่ หรือโทรแจ้งเจ้าหน้าที่" };
+  }
+
   const parsed = donationSchema.safeParse({
     fundId: text(formData, "fundId"),
     donorName: text(formData, "donorName"),

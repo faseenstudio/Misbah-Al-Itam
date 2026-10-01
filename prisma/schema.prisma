@@ -184,3 +184,17 @@ model Activity {
   @@index([category, status, publishedAt])
   @@map("activities")
 }
+
+// ─────────────────────────────────────────────────────────────
+// Fixed-window rate-limit counters (donation form, admin login).
+// Key = "<bucket>:<hashed identifier>:<window index>"; rows expire and are pruned.
+// ─────────────────────────────────────────────────────────────
+
+model RateLimit {
+  key       String   @id
+  count     Int      @default(1)
+  expiresAt DateTime
+
+  @@index([expiresAt])
+  @@map("rate_limits")
+}
