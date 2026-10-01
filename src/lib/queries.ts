@@ -76,5 +76,18 @@ export async function getActivityBySlug(slug: string) {
 }
 
 export async function getActiveFunds() {
-  return prisma.fund.findMany({ where: { isActive: true }, orderBy: { sortOrder: "asc" } });
+  return prisma.fund.findMany({
+    where: { isActive: true },
+    orderBy: { sortOrder: "asc" },
+    select: {
+      id: true,
+      slug: true,
+      nameTh: true,
+      nameEn: true,
+      description: true,
+      bankName: true,
+      accountNumber: true,
+      accountName: true,
+    },
+  });
 }

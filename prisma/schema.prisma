@@ -72,7 +72,6 @@ model Fund {
   bankName      String  @default("ธนาคารอิสลามแห่งประเทศไทย")
   accountNumber String  @unique // e.g. 061-1-16459-0
   accountName   String
-  qrCodeUrl     String? // PromptPay / bank QR image
   sortOrder     Int     @default(0)
   isActive      Boolean @default(true)
 

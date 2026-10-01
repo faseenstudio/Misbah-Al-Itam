@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    serverActions: {
+      // e-Slip uploads are capped at 5 MB in the form schema; leave headroom for multipart overhead.
+      bodySizeLimit: "6mb",
+    },
+  },
   images: {
     // Activity and project images served from object storage
     remotePatterns: [
