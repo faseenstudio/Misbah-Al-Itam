@@ -117,7 +117,7 @@ export function FileDrop({
         <ImageUp className="size-6" />
       </span>
       <span className="font-medium text-primary">แตะเพื่อเลือกรูปสลิป</span>
-      <span className="text-sm text-muted-foreground">หรือลากไฟล์มาวางที่นี่ · JPG, PNG, WEBP ไม่เกิน 5 MB</span>
+      <span className="text-sm text-muted-foreground">หรือลากไฟล์มาวางที่นี่ · JPG, PNG, WEBP (ภาพใหญ่จะถูกย่ออัตโนมัติ)</span>
     </label>
   );
 }

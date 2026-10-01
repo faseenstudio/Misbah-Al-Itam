@@ -29,6 +29,8 @@ npm run dev
 | `npm run storage:setup` | Create the Supabase Storage buckets (one time) |
 | `npm run typecheck` / `npm run lint` | Static checks |
 
+**Deploying:** see [DEPLOY.md](DEPLOY.md) (Vercel + Supabase, step by step).
+
 ## e-Slip storage (Supabase)
 
 Donor slips contain personal bank details, so they live in a **private** bucket and are only
@@ -37,8 +39,8 @@ ever viewed by admins through short-lived signed URLs. The database stores only 
 1. In `.env`, set `SUPABASE_URL` (already in `.env.example`) and `SUPABASE_SERVICE_ROLE_KEY`
    (Supabase → Project Settings → API Keys → `service_role` / secret key). This key is
    server-only: never prefix it with `NEXT_PUBLIC_` and never commit it.
-2. Run `npm run storage:setup` once. It creates the private `slips` bucket (images only, 5 MB max)
-   and the public `media` bucket for activity photos.
+2. The buckets already exist on the production project. For a new project, run
+   `npm run storage:setup` once: it creates the private `slips` bucket and the public `media` bucket.
 
 Without Supabase credentials, development stores slips in `.data/slips/` (git-ignored).
 A production build refuses to start uploads without Supabase unless `SLIP_STORAGE=local` is set

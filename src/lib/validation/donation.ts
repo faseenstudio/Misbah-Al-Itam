@@ -2,7 +2,8 @@ import { z } from "zod";
 
 /** Shared between the donation form (client) and the submit Server Action (server). */
 
-export const SLIP_MAX_BYTES = 5 * 1024 * 1024; // 5 MB
+// Vercel caps request bodies at 4.5 MB; large slips are downscaled in the browser first.
+export const SLIP_MAX_BYTES = 4 * 1024 * 1024; // 4 MB
 export const SLIP_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
 export const AMOUNT_MIN = 1;
 export const AMOUNT_MAX = 10_000_000;
@@ -43,7 +44,7 @@ export const donationSchema = z.object({
   slip: z
     .file({ error: "กรุณาแนบสลิปการโอนเงิน" })
     .min(1, "ไฟล์สลิปว่างเปล่า")
-    .max(SLIP_MAX_BYTES, "ไฟล์ใหญ่เกิน 5 MB")
+    .max(SLIP_MAX_BYTES, "ไฟล์ใหญ่เกิน 4 MB กรุณาใช้ภาพหน้าจอสลิปแทนการถ่ายรูป")
     .mime([...SLIP_MIME_TYPES], "รองรับเฉพาะไฟล์ภาพ JPG, PNG หรือ WEBP"),
 });
 

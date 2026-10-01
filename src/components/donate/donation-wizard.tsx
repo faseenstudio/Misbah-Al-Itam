@@ -6,6 +6,7 @@ import { CheckCircle2, Clock, HeartHandshake } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { submitDonation } from "@/app/(public)/donate/actions";
+import { downscaleImage } from "@/lib/client-image";
 import { formatBaht } from "@/lib/format";
 import {
   donationSchema,
@@ -203,7 +204,12 @@ export function DonationWizard({ funds, initialFundId }: { funds: DonateFund[]; 
             formError={state.formError}
             pending={pending}
             onChange={(field, value) => dispatch({ type: "setValue", field, value })}
-            onSlipChange={(file) => dispatch({ type: "setSlip", file, error: file ? validateSlip(file) : undefined })}
+            onSlipChange={async (picked) => {
+              const file = picked
+                ? await downscaleImage(picked, { maxDimension: 2400, quality: 0.9, keepIfSmallerThan: 2 * 1024 * 1024 })
+                : null;
+              dispatch({ type: "setSlip", file, error: file ? validateSlip(file) : undefined });
+            }}
             onChangeFund={() => goTo(1)}
             onBack={() => goTo(2)}
             onSubmit={handleSubmit}

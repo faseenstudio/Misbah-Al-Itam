@@ -4,34 +4,8 @@ import { useRef, useState } from "react";
 import { AlertCircle, ImagePlus, Loader2, X } from "lucide-react";
 
 import { uploadMediaAction } from "@/app/admin/(panel)/media-actions";
+import { downscaleImage } from "@/lib/client-image";
 import { cn } from "@/lib/utils";
-
-const MAX_DIMENSION = 2000;
-
-/**
- * Downscale and re-encode in the browser before upload: phone photos are often 5–10 MB,
- * well over the Server Action body limit. Also converts HEIC → JPEG where the browser can decode it.
- */
-async function prepareImage(file: File): Promise<Blob> {
-  try {
-    const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
-    const scale = Math.min(1, MAX_DIMENSION / Math.max(bitmap.width, bitmap.height));
-    const canvas = document.createElement("canvas");
-    canvas.width = Math.round(bitmap.width * scale);
-    canvas.height = Math.round(bitmap.height * scale);
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return file;
-    ctx.fillStyle = "#fff"; // flatten transparency for JPEG
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-    bitmap.close();
-    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.85));
-    // Keep the original when it is already small and re-encoding wouldn't help.
-    return blob && (blob.size < file.size || !["image/jpeg", "image/png", "image/webp"].includes(file.type)) ? blob : file;
-  } catch {
-    return file; // undecodable here — let the server decide
-  }
-}
 
 type Props = {
   /** Current image URLs. */
@@ -57,7 +31,7 @@ export function ImageUpload({ value, onChange, multiple = false, folder = "activ
     const uploaded: string[] = [];
     for (const file of list) {
       const body = new FormData();
-      body.set("file", new File([await prepareImage(file)], file.name.replace(/\.\w+$/, ".jpg")));
+      body.set("file", await downscaleImage(file, { maxDimension: 2000, quality: 0.85 }));
       body.set("folder", folder);
       try {
         const result = await uploadMediaAction(body);
