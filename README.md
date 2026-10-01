@@ -12,16 +12,20 @@ Website for the foundation: activities and news, progress updates on the **Baan 
 
 ## Getting started
 
+**คู่มือภาษาไทยสำหรับ Windows: [LOCAL_DEV.md](LOCAL_DEV.md)**
+
 ```bash
-cp .env.example .env          # set DATABASE_URL, AUTH_SECRET, SEED_ADMIN_*
 npm install                   # also runs `prisma generate`
-npm run db:migrate            # create tables
-npm run db:seed               # 5 funds, Baan Takiang project, first admin
-npm run dev
+npm run db:up                 # PostgreSQL in Docker (or use your own and edit DATABASE_URL)
+npm run setup                 # creates .env, applies migrations, seeds funds + dev admin
+npm run dev                   # http://localhost:3000  ·  /admin → admin@example.com / change-me-please
 ```
 
 | Script | Purpose |
 | --- | --- |
+| `npm run setup` | First-time local setup (.env, migrations, seed) |
+| `npm run db:up` / `db:down` | Start / stop the local PostgreSQL container |
+| `npm run db:reset` | Wipe the local database, re-apply migrations and seed |
 | `npm run db:migrate` | Create and apply a migration in development |
 | `npm run db:deploy` | Apply migrations in production |
 | `npm run db:seed` | Upsert funds, featured project, and admin user |

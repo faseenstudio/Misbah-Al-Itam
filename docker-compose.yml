@@ -1,0 +1,25 @@
+# Local development database: `npm run db:up` (needs Docker Desktop).
+# Matches DATABASE_URL in .env.example.
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: misbah-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: misbah
+    ports:
+      # Change the left number (e.g. "5433:5432") if PostgreSQL is already installed on this machine,
+      # and update DATABASE_URL in .env to match.
+      - "5432:5432"
+    volumes:
+      - misbah-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d misbah"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  misbah-db-data:
