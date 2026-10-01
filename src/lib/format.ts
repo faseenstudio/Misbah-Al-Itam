@@ -27,3 +27,14 @@ export function telHref(phone: string): string {
 export function donationReference(id: string): string {
   return `MSB-${id.slice(-8).toUpperCase()}`;
 }
+
+/** Date → "YYYY-MM-DDTHH:mm" in Thailand time (UTC+7, no DST), for datetime-local inputs. */
+export function toBangkokInputValue(date: Date | null | undefined): string {
+  if (!date) return "";
+  return new Date(date.getTime() + 7 * 60 * 60 * 1000).toISOString().slice(0, 16);
+}
+
+/** Date → "YYYY-MM-DD" in Thailand time, for date inputs. */
+export function toBangkokDateValue(date: Date | null | undefined): string {
+  return toBangkokInputValue(date).slice(0, 10);
+}

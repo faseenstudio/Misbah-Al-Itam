@@ -51,8 +51,14 @@ Sign in at `/admin` with the account created by `npm run db:seed` (`SEED_ADMIN_E
 
 | Role | Can do |
 | --- | --- |
-| `SUPER_ADMIN`, `ADMIN` | Dashboard, review e-Slips (approve / reject / reopen), view slips |
-| `EDITOR` | Dashboard totals only (content management comes next) |
+| `SUPER_ADMIN`, `ADMIN` | Everything: dashboard, e-Slip review (approve / reject / reopen), content |
+| `EDITOR` | Dashboard totals, activities / news / Waqf updates, project page — no slips |
+
+**Content:** posts are plain text (a blank line starts a new paragraph). Photos are resized in the
+browser (max 2000 px, JPEG) and stored in the public `media` bucket. Publishing a
+"ความคืบหน้าบ้านตะเกียง" post with a percentage moves the home-page progress bar, but only when it is
+the newest such update — editing an older one never rolls progress back. Removed or deleted
+photos are deleted from storage too.
 
 Every admin page, Server Action and the slip route re-checks the session and role against the
 database (`src/lib/dal.ts`); `src/proxy.ts` only does a fast cookie check. Set `AUTH_URL` to the

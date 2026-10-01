@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ExternalLink, LayoutDashboard, ReceiptText } from "lucide-react";
+import { ExternalLink, House, LayoutDashboard, Newspaper, ReceiptText } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -21,6 +21,8 @@ export function AdminNav({ pendingCount, canReview }: { pendingCount: number; ca
           },
         ]
       : []),
+    { href: "/admin/activities", label: "กิจกรรมและข่าวสาร", icon: Newspaper, active: pathname.startsWith("/admin/activities") },
+    { href: "/admin/projects", label: "โครงการบ้านตะเกียง", icon: House, active: pathname.startsWith("/admin/projects") },
   ];
 
   return (

@@ -107,3 +107,57 @@ function localPath(key: string) {
   if (!file.startsWith(LOCAL_ROOT + path.sep)) throw new Error("Invalid slip key");
   return file;
 }
+
+// ─────────────────────────────────────────────────────────────
+// Public media (activity & project photos)
+// ─────────────────────────────────────────────────────────────
+
+const MEDIA_BUCKET = process.env.SUPABASE_MEDIA_BUCKET || "media";
+const LOCAL_MEDIA_ROOT = path.join(process.cwd(), ".data", "media");
+/** Local-dev media is served by src/app/media/[...key]/route.ts under this prefix. */
+const LOCAL_MEDIA_PREFIX = "/media/";
+
+/** Store a public image and return the URL to save in the database. */
+export async function uploadMedia(bytes: Uint8Array, contentType: SlipMimeType, folder: string): Promise<string> {
+  const now = new Date();
+  const key = `${folder}/${now.getUTCFullYear()}/${String(now.getUTCMonth() + 1).padStart(2, "0")}/${randomUUID()}.${EXTENSIONS[contentType]}`;
+
+  const client = getSupabase();
+  if (client) {
+    const { error } = await client.storage
+      .from(MEDIA_BUCKET)
+      .upload(key, bytes, { contentType, upsert: false, cacheControl: "31536000" });
+    if (error) throw new Error(`Media upload failed: ${error.message}`);
+    return client.storage.from(MEDIA_BUCKET).getPublicUrl(key).data.publicUrl;
+  }
+
+  const file = localMediaPath(key);
+  await mkdir(path.dirname(file), { recursive: true });
+  await writeFile(file, bytes);
+  return LOCAL_MEDIA_PREFIX + key;
+}
+
+/** Delete an image we stored earlier. URLs we don't own (e.g. bundled /photos/…) are ignored. */
+export async function deleteMediaByUrl(url: string): Promise<void> {
+  const client = getSupabase();
+  if (client) {
+    const marker = `/storage/v1/object/public/${MEDIA_BUCKET}/`;
+    const i = url.indexOf(marker);
+    if (i !== -1) await client.storage.from(MEDIA_BUCKET).remove([decodeURIComponent(url.slice(i + marker.length))]);
+    return;
+  }
+  if (url.startsWith(LOCAL_MEDIA_PREFIX)) {
+    await rm(localMediaPath(url.slice(LOCAL_MEDIA_PREFIX.length)), { force: true });
+  }
+}
+
+/** Local-development only: read a media file from disk. */
+export async function readLocalMedia(key: string): Promise<Buffer> {
+  return readFile(localMediaPath(key));
+}
+
+function localMediaPath(key: string) {
+  const file = path.resolve(LOCAL_MEDIA_ROOT, key);
+  if (!file.startsWith(LOCAL_MEDIA_ROOT + path.sep)) throw new Error("Invalid media key");
+  return file;
+}

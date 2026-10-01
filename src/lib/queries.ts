@@ -68,9 +68,18 @@ export async function getPublishedActivities({
 
 export type ActivitySummary = Awaited<ReturnType<typeof getPublishedActivities>>["items"][number];
 
+/** Route params arrive percent-encoded, so Thai slugs must be decoded before lookup. */
+function decodeSlug(slug: string) {
+  try {
+    return decodeURIComponent(slug).normalize("NFC");
+  } catch {
+    return slug;
+  }
+}
+
 export async function getActivityBySlug(slug: string) {
   return prisma.activity.findFirst({
-    where: { slug, ...publishedWhere() },
+    where: { slug: decodeSlug(slug), ...publishedWhere() },
     include: { project: { select: { title: true, slug: true } } },
   });
 }
