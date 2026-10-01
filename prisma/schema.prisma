@@ -1,0 +1,187 @@
+// Misbah Al-Itam Foundation (มูลนิธิตะเกียงเด็กกำพร้า)
+// Prisma schema — PostgreSQL
+// Docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─────────────────────────────────────────────────────────────
+// Enums
+// ─────────────────────────────────────────────────────────────
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  EDITOR // can manage content only, not donations
+}
+
+enum DonationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ActivityCategory {
+  ACTIVITY // general foundation activities
+  NEWS // announcements
+  WAQF_UPDATE // Baan Takiang construction progress updates
+}
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
+}
+
+// ─────────────────────────────────────────────────────────────
+// Admin users (authenticated via NextAuth Credentials + JWT)
+// ─────────────────────────────────────────────────────────────
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  role         Role      @default(ADMIN)
+  isActive     Boolean   @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  reviewedDonations Donation[] @relation("DonationReviewer")
+  activities        Activity[]
+
+  @@map("users")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Donation funds — 5 accounts at Islamic Bank of Thailand
+// ─────────────────────────────────────────────────────────────
+
+model Fund {
+  id            String  @id @default(cuid())
+  slug          String  @unique // admin | orphans | waqf | zakat | education
+  nameTh        String
+  nameEn        String
+  description   String?
+  bankName      String  @default("ธนาคารอิสลามแห่งประเทศไทย")
+  accountNumber String  @unique // e.g. 061-1-16459-0
+  accountName   String
+  qrCodeUrl     String? // PromptPay / bank QR image
+  sortOrder     Int     @default(0)
+  isActive      Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  donations Donation[]
+  projects  Project[]
+
+  @@map("funds")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Donations — submitted by the public with an e-Slip, reviewed by admin
+// ─────────────────────────────────────────────────────────────
+
+model Donation {
+  id String @id @default(cuid())
+
+  // Donor details
+  donorName   String
+  donorPhone  String?
+  donorEmail  String?
+  isAnonymous Boolean @default(false) // hide name on any public listing
+  message     String? // optional du'a / note from donor
+
+  // Transfer details
+  amount        Decimal  @db.Decimal(12, 2)
+  transferredAt DateTime // date/time shown on the e-Slip
+
+  // e-Slip file in object storage (Supabase Storage / Cloudinary)
+  slipUrl        String
+  slipStorageKey String // path or public_id, used for deletion / signed URLs
+
+  // Review workflow
+  status       DonationStatus @default(PENDING)
+  reviewedAt   DateTime?
+  reviewNote   String? // reason when rejected, or internal note
+  reviewedById String?
+  reviewedBy   User?          @relation("DonationReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  fundId String
+  fund   Fund   @relation(fields: [fundId], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@index([fundId, status])
+  @@map("donations")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Projects — e.g. "โครงการวะกัฟ บ้านตะเกียง" highlighted on the home page
+// ─────────────────────────────────────────────────────────────
+
+model Project {
+  id              String   @id @default(cuid())
+  slug            String   @unique
+  title           String
+  summary         String
+  description     String?  @db.Text
+  coverImageUrl   String?
+  goalAmount      Decimal? @db.Decimal(14, 2)
+  progressPercent Int      @default(0) // construction progress 0–100, set by admin
+  isFeatured      Boolean  @default(false)
+  isActive        Boolean  @default(true)
+
+  fundId String? // donations to this fund count toward goalAmount
+  fund   Fund?   @relation(fields: [fundId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  activities Activity[]
+
+  @@map("projects")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Activities / News / Waqf construction updates
+// ─────────────────────────────────────────────────────────────
+
+model Activity {
+  id            String           @id @default(cuid())
+  slug          String           @unique
+  title         String
+  excerpt       String?
+  content       String           @db.Text
+  coverImageUrl String?
+  imageUrls     String[]         @default([])
+  category      ActivityCategory @default(ACTIVITY)
+  status        PublishStatus    @default(DRAFT)
+  publishedAt   DateTime?
+  eventDate     DateTime? // when the activity actually took place
+
+  // For WAQF_UPDATE posts: progress snapshot at time of posting
+  progressPercent Int?
+
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  authorId String?
+  author   User?   @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, publishedAt])
+  @@index([category, status, publishedAt])
+  @@map("activities")
+}
