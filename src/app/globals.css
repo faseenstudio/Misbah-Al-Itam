@@ -4,46 +4,46 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Misbah Al-Itam design tokens
- * Primary: Navy Blue · Accent: Gold · Background: White / Light Gray
- * Values are OKLCH (shadcn/ui convention). Brand hexes noted alongside.
+ * Misbah Al-Itam design tokens — sampled from the official logo and the 5-fund donation poster.
+ * Primary: deep navy · Accent: warm gold · Background: warm cream / off-white
  */
 :root {
   --radius: 0.75rem;
 
-  --background: oklch(0.985 0.002 247); /* #F8FAFC light gray */
-  --foreground: oklch(0.24 0.06 262); /* #13254A deep navy text */
+  --background: #fbf8f2; /* warm off-white */
+  --foreground: #132a4a; /* brand navy text */
 
-  --card: oklch(1 0 0);
+  --card: #ffffff;
   --card-foreground: var(--foreground);
-  --popover: oklch(1 0 0);
+  --popover: #ffffff;
   --popover-foreground: var(--foreground);
 
-  --primary: oklch(0.32 0.1 262); /* #1B3A6B navy */
-  --primary-foreground: oklch(0.99 0 0);
+  --primary: #132a4a; /* brand navy (poster band, logo) */
+  --primary-foreground: #ffffff;
 
-  --secondary: oklch(0.8 0.14 85); /* #E5B53A gold */
-  --secondary-foreground: oklch(0.24 0.06 262);
+  --secondary: #e2b563; /* brand gold */
+  --secondary-foreground: #132a4a;
+  --gold-deep: #9a7429; /* gold for text on light backgrounds (AA contrast) */
 
-  --accent: oklch(0.95 0.05 90); /* #FBF1D3 soft gold tint */
-  --accent-foreground: oklch(0.32 0.1 262);
+  --accent: #f3ebdd; /* cream (poster background) */
+  --accent-foreground: #132a4a;
 
-  --muted: oklch(0.96 0.005 247);
-  --muted-foreground: oklch(0.5 0.03 257);
+  --muted: #f1ede5;
+  --muted-foreground: #5b6474;
 
-  --destructive: oklch(0.58 0.22 27);
-  --success: oklch(0.6 0.14 155);
-  --warning: oklch(0.78 0.15 75);
+  --destructive: #c0392b;
+  --success: #2f855a;
+  --warning: #d69e2e;
 
-  --border: oklch(0.91 0.01 250);
-  --input: oklch(0.91 0.01 250);
-  --ring: oklch(0.8 0.14 85);
+  --border: #e6dfd2;
+  --input: #e0d8c8;
+  --ring: #e2b563;
 
-  --chart-1: oklch(0.32 0.1 262);
-  --chart-2: oklch(0.8 0.14 85);
-  --chart-3: oklch(0.55 0.1 240);
-  --chart-4: oklch(0.65 0.12 160);
-  --chart-5: oklch(0.6 0.15 30);
+  --chart-1: #132a4a;
+  --chart-2: #e2b563;
+  --chart-3: #3b5b8c;
+  --chart-4: #2f855a;
+  --chart-5: #b5523b;
 }
 
 @theme inline {
@@ -60,6 +60,7 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
+  --color-gold-deep: var(--gold-deep);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-muted: var(--muted);

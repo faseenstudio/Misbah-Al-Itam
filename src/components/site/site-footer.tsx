@@ -36,11 +36,11 @@ export function SiteFooter() {
           </ul>
           <h2 className="mt-3 text-sm font-semibold text-secondary">ติดต่อ</h2>
           <ul className="flex flex-col gap-2 text-sm">
-            {FOUNDATION.phones.map((phone) => (
+            {FOUNDATION.contacts.map(({ name, phone }) => (
               <li key={phone}>
                 <a href={telHref(phone)} className="flex items-center gap-2 text-white/80 hover:text-white">
                   <Phone className="size-4" />
-                  {phone}
+                  {phone} <span className="text-white/60">{name}</span>
                 </a>
               </li>
             ))}

@@ -1,5 +1,7 @@
+import Image from "next/image";
 import { BookOpen, HandHeart, House } from "lucide-react";
 import { SectionHeading } from "@/components/home/section-heading";
+import aboutPhoto from "../../../public/photos/children-reading.jpg";
 
 // TODO: replace with the official foundation introduction from the SRS document
 const PILLARS = [
@@ -23,11 +25,24 @@ const PILLARS = [
 export function About() {
   return (
     <section id="about" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-16 sm:py-20">
-      <SectionHeading
-        eyebrow="เกี่ยวกับมูลนิธิ"
-        title="แสงสว่างเล็ก ๆ ที่ส่งต่อถึงน้อง ๆ"
-        description="มูลนิธิตะเกียงเด็กกำพร้า (Misbah Al-Itam) ทำงานเพื่อดูแลเด็กกำพร้าและครอบครัวผู้ยากไร้ ด้วยความเชื่อว่าเด็กทุกคนควรได้รับโอกาสในชีวิต การศึกษา และความรัก"
-      />
+      <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
+        <SectionHeading
+          align="left"
+          eyebrow="เกี่ยวกับมูลนิธิ"
+          title="แสงสว่างเล็ก ๆ ที่ส่งต่อถึงน้อง ๆ"
+          description="มูลนิธิตะเกียงเด็กกำพร้า (Misbah Al-Itam) ทำงานเพื่อดูแลเด็กกำพร้าและครอบครัวผู้ยากไร้ ด้วยความเชื่อว่าเด็กทุกคนควรได้รับโอกาสในชีวิต การศึกษา และความรัก"
+        />
+        <div className="relative aspect-[16/9] overflow-hidden rounded-2xl shadow-lg ring-1 ring-secondary/40 sm:aspect-[16/7]">
+          <Image
+            src={aboutPhoto}
+            alt="ครูกำลังสอนอัลกุรอานให้เด็ก ๆ หน้าอาคารบ้านตะเกียง"
+            fill
+            placeholder="blur"
+            sizes="(min-width: 1024px) 560px, 100vw"
+            className="object-cover object-[45%_center]"
+          />
+        </div>
+      </div>
       <div className="mt-10 grid gap-5 sm:grid-cols-3">
         {PILLARS.map(({ icon: Icon, title, text }) => (
           <div key={title} className="flex flex-col gap-3 rounded-xl border bg-card p-6 shadow-sm">

@@ -15,10 +15,11 @@ export function ContactCta() {
             <h2 className="text-2xl font-bold sm:text-3xl">มีคำถามเกี่ยวกับการบริจาค?</h2>
             <p className="text-white/80">ติดต่อเจ้าหน้าที่มูลนิธิได้โดยตรง ยินดีให้ข้อมูลทุกวัน</p>
             <div className="mt-2 flex flex-wrap gap-x-6 gap-y-2">
-              {FOUNDATION.phones.map((phone) => (
+              {FOUNDATION.contacts.map(({ name, phone }) => (
                 <a key={phone} href={telHref(phone)} className="flex items-center gap-2 text-lg font-semibold text-secondary hover:underline">
                   <Phone className="size-5" />
                   {phone}
+                  <span className="text-sm font-normal text-white/70">{name}</span>
                 </a>
               ))}
             </div>

@@ -24,7 +24,7 @@ export default function ContactPage() {
         <section aria-labelledby="phones" className="flex flex-col gap-4 rounded-2xl border bg-card p-6 shadow-sm sm:p-8">
           <h2 id="phones" className="text-xl font-semibold text-primary">โทรศัพท์</h2>
           <ul className="flex flex-col gap-3">
-            {FOUNDATION.phones.map((phone) => (
+            {FOUNDATION.contacts.map(({ name, phone }) => (
               <li key={phone}>
                 <a
                   href={telHref(phone)}
@@ -35,7 +35,7 @@ export default function ContactPage() {
                   </span>
                   <span className="flex flex-col">
                     <span className="text-xl font-semibold tracking-wide text-primary">{phone}</span>
-                    <span className="text-sm text-muted-foreground">แตะเพื่อโทร</span>
+                    <span className="text-sm text-muted-foreground">{name} · แตะเพื่อโทร</span>
                   </span>
                 </a>
               </li>

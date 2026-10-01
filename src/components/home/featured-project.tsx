@@ -1,11 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Hammer, HeartHandshake, House, Users } from "lucide-react";
+import { ArrowRight, Hammer, HeartHandshake, MapPin, Users } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import type { getFeaturedProject } from "@/lib/queries";
+import { FOUNDATION } from "@/lib/constants";
 import { formatBaht, formatThaiDate } from "@/lib/format";
+import buildingPhoto from "../../../public/photos/baan-takiang-building.jpg";
 
 type FeaturedProject = NonNullable<Awaited<ReturnType<typeof getFeaturedProject>>>;
 
@@ -18,20 +20,13 @@ export function FeaturedProject({ project }: { project: FeaturedProject }) {
     <section id="waqf" className="scroll-mt-20 bg-accent/60 py-16 sm:py-20">
       <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 lg:grid-cols-2">
         <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-primary shadow-lg">
-          {project.coverImageUrl ? (
-            <Image
-              src={project.coverImageUrl}
-              alt={project.title}
-              fill
-              sizes="(min-width: 1024px) 560px, 100vw"
-              className="object-cover"
-            />
-          ) : (
-            <div className="flex h-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-primary to-primary/80 text-secondary">
-              <House className="size-20" strokeWidth={1.25} />
-              <span className="text-sm text-white/70">ภาพโครงการบ้านตะเกียง</span>
-            </div>
-          )}
+          <Image
+            src={project.coverImageUrl ?? buildingPhoto}
+            alt={project.title}
+            fill
+            sizes="(min-width: 1024px) 560px, 100vw"
+            className="object-cover"
+          />
           <span className="absolute top-4 left-4 rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground shadow">
             โครงการเด่น · วะกัฟ
           </span>
@@ -39,6 +34,10 @@ export function FeaturedProject({ project }: { project: FeaturedProject }) {
 
         <div className="flex flex-col gap-5">
           <h2 className="text-2xl font-bold text-primary sm:text-3xl">{project.title}</h2>
+          <p className="flex items-center gap-1.5 text-sm font-medium text-gold-deep">
+            <MapPin className="size-4" />
+            {FOUNDATION.baanTakiangLocation}
+          </p>
           <p className="text-muted-foreground">{project.summary}</p>
 
           <div className="flex flex-col gap-4 rounded-xl border bg-card p-5 shadow-sm">

@@ -1,3 +1,4 @@
+import { OrnamentDivider } from "@/components/ornament-divider";
 import { cn } from "@/lib/utils";
 
 export function SectionHeading({
@@ -22,9 +23,9 @@ export function SectionHeading({
       )}
     >
       {eyebrow && (
-        <p className="flex items-center gap-2 text-sm font-semibold text-secondary-foreground/80">
-          <span aria-hidden="true" className="h-0.5 w-6 rounded bg-secondary" />
+        <p className="flex flex-col gap-1.5 text-sm font-semibold text-gold-deep" style={{ alignItems: "inherit" }}>
           {eyebrow}
+          <OrnamentDivider />
         </p>
       )}
       <h2 className="text-2xl font-bold text-primary sm:text-3xl">{title}</h2>

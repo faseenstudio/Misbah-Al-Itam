@@ -4,7 +4,14 @@ export const FOUNDATION = {
   bankName: "ธนาคารอิสลามแห่งประเทศไทย",
   // TODO: confirm the exact account holder name printed on the bank book
   accountName: "มูลนิธิตะเกียงเด็กกำพร้า",
+  tagline: "พื้นที่แห่งการแบ่งปัน",
   phones: ["093-582-6662", "089-794-0963"],
+  contacts: [
+    { name: "อ.ฟาฮัน", phone: "093-582-6662" },
+    { name: "อ.ซัยดี้", phone: "089-794-0963" },
+  ],
+  // Location of the Baan Takiang Waqf project
+  baanTakiangLocation: "ต.ละงู อ.ละงู จ.สตูล",
   // TODO: fill in the foundation's real social media URLs — empty entries are hidden
   social: {
     facebook: "",

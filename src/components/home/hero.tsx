@@ -3,7 +3,7 @@ import { ArrowRight, HeartHandshake, Landmark, ReceiptText, ShieldCheck } from "
 
 import { Button } from "@/components/ui/button";
 import { FundIcon } from "@/components/fund-icon";
-import { FUNDS } from "@/lib/constants";
+import { FOUNDATION, FUNDS } from "@/lib/constants";
 
 const TRUST_POINTS = [
   { icon: Landmark, text: "โอนตรงเข้าบัญชีมูลนิธิ ธนาคารอิสลามแห่งประเทศไทย" },
@@ -27,7 +27,7 @@ export function Hero() {
       <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 sm:py-20 lg:grid-cols-[1.25fr_1fr] lg:py-24">
         <div className="flex flex-col gap-6">
           <p className="w-fit rounded-full border border-secondary/40 bg-secondary/10 px-3 py-1 text-sm text-secondary">
-            มูลนิธิตะเกียงเด็กกำพร้า · Misbah Al-Itam
+            {FOUNDATION.nameTh} · {FOUNDATION.tagline}
           </p>
           <h1 className="text-3xl font-bold sm:text-5xl sm:leading-[1.25]">
             ร่วมจุด<span className="text-secondary">ตะเกียง</span>
