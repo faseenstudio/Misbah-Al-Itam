@@ -5,7 +5,21 @@ export const FOUNDATION = {
   // TODO: confirm the exact account holder name printed on the bank book
   accountName: "มูลนิธิตะเกียงเด็กกำพร้า",
   phones: ["093-582-6662", "089-794-0963"],
+  // TODO: fill in the foundation's real social media URLs — empty entries are hidden
+  social: {
+    facebook: "",
+    line: "",
+    youtube: "",
+    tiktok: "",
+  },
 } as const;
+
+export const NAV_LINKS = [
+  { href: "/", label: "หน้าแรก" },
+  { href: "/activities", label: "กิจกรรมและข่าวสาร" },
+  { href: "/#waqf", label: "โครงการบ้านตะเกียง" },
+  { href: "/contact", label: "ติดต่อเรา" },
+] as const;
 
 export type FundSlug = "admin" | "orphans" | "waqf" | "zakat" | "education";
 
