@@ -37,9 +37,12 @@ export default async function ActivityPage({ params }: PageProps<"/activities/[s
   return (
     <>
       <PageHeader title={activity.title}>
-        <Link href="/activities" className="flex w-fit items-center gap-1 text-sm text-white/80 hover:text-white">
+        <Link
+          href={isWaqfUpdate ? "/waqf" : "/activities"}
+          className="flex w-fit items-center gap-1 text-sm text-white/80 hover:text-white"
+        >
           <ChevronLeft className="size-4" />
-          กิจกรรมและข่าวสาร
+          {isWaqfUpdate ? "โครงการบ้านตะเกียง" : "กิจกรรมและข่าวสาร"}
         </Link>
         <div className="flex flex-wrap items-center gap-3 text-sm text-white/80">
           <Badge variant={isWaqfUpdate ? "gold" : "soft"}>{CATEGORY_LABELS[activity.category]}</Badge>

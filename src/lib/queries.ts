@@ -66,6 +66,24 @@ export async function getPublishedActivities({
   return { items, total };
 }
 
+/** Published construction updates for a project, newest first (for the /waqf timeline). */
+export async function getProjectUpdates(projectId: string) {
+  return prisma.activity.findMany({
+    where: { ...publishedWhere(), category: "WAQF_UPDATE", projectId },
+    orderBy: { publishedAt: "desc" },
+    select: {
+      id: true,
+      slug: true,
+      title: true,
+      excerpt: true,
+      coverImageUrl: true,
+      imageUrls: true,
+      publishedAt: true,
+      progressPercent: true,
+    },
+  });
+}
+
 export type ActivitySummary = Awaited<ReturnType<typeof getPublishedActivities>>["items"][number];
 
 /** Route params arrive percent-encoded, so Thai slugs must be decoded before lookup. */
