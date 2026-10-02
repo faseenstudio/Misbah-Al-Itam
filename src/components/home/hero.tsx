@@ -46,7 +46,7 @@ export function Hero() {
               </Link>
             </Button>
             <Button asChild variant="outline-light" size="lg">
-              <Link href="#waqf">
+              <Link href="/waqf">
                 โครงการบ้านตะเกียง
                 <ArrowRight />
               </Link>

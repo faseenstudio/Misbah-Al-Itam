@@ -24,7 +24,7 @@ export const FOUNDATION = {
 export const NAV_LINKS = [
   { href: "/", label: "หน้าแรก" },
   { href: "/activities", label: "กิจกรรมและข่าวสาร" },
-  { href: "/#waqf", label: "โครงการบ้านตะเกียง" },
+  { href: "/waqf", label: "โครงการบ้านตะเกียง" },
   { href: "/contact", label: "ติดต่อเรา" },
 ] as const;
 

@@ -1,19 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Hammer, HeartHandshake, MapPin, Users } from "lucide-react";
+import { ArrowRight, HeartHandshake, MapPin } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import type { getFeaturedProject } from "@/lib/queries";
+import { ProjectProgressCard, type FeaturedProjectData } from "@/components/project-progress-card";
 import { FOUNDATION } from "@/lib/constants";
-import { formatBaht, formatThaiDate } from "@/lib/format";
 import buildingPhoto from "../../../public/photos/baan-takiang-building.jpg";
 
-type FeaturedProject = NonNullable<Awaited<ReturnType<typeof getFeaturedProject>>>;
-
-export function FeaturedProject({ project }: { project: FeaturedProject }) {
-  const goal = project.goalAmount ? Number(project.goalAmount) : null;
-  const fundingPercent = goal ? Math.min(100, Math.round((project.raisedAmount / goal) * 100)) : null;
+export function FeaturedProject({ project }: { project: FeaturedProjectData }) {
   const donateHref = project.fund ? `/donate?fund=${project.fund.slug}` : "/donate";
 
   return (
@@ -40,47 +34,7 @@ export function FeaturedProject({ project }: { project: FeaturedProject }) {
           </p>
           <p className="text-muted-foreground">{project.summary}</p>
 
-          <div className="flex flex-col gap-4 rounded-xl border bg-card p-5 shadow-sm">
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="flex items-center gap-2 font-medium text-primary">
-                  <Hammer className="size-4" />
-                  ความคืบหน้าการก่อสร้าง
-                </span>
-                <span className="font-semibold text-primary">{project.progressPercent}%</span>
-              </div>
-              <Progress value={project.progressPercent} aria-label="ความคืบหน้าการก่อสร้าง" />
-            </div>
-
-            {goal !== null && fundingPercent !== null && (
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="font-medium text-primary">ยอดบริจาค</span>
-                  <span className="text-muted-foreground">
-                    <strong className="text-primary">{formatBaht(project.raisedAmount)}</strong> / {formatBaht(goal)}
-                  </span>
-                </div>
-                <Progress value={fundingPercent} indicatorClassName="bg-primary" aria-label="ยอดบริจาคเทียบเป้าหมาย" />
-              </div>
-            )}
-
-            {project.donationCount > 0 && (
-              <p className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Users className="size-4" />
-                ผู้ร่วมบริจาคแล้ว {project.donationCount.toLocaleString("th-TH")} รายการ
-              </p>
-            )}
-
-            {project.latestUpdate && (
-              <Link
-                href={`/activities/${project.latestUpdate.slug}`}
-                className="rounded-lg bg-muted px-3 py-2 text-sm hover:bg-accent"
-              >
-                <span className="text-muted-foreground">อัปเดตล่าสุด {formatThaiDate(project.latestUpdate.publishedAt)}: </span>
-                <span className="font-medium text-primary">{project.latestUpdate.title}</span>
-              </Link>
-            )}
-          </div>
+          <ProjectProgressCard project={project} />
 
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button asChild variant="gold" size="lg">
@@ -90,8 +44,8 @@ export function FeaturedProject({ project }: { project: FeaturedProject }) {
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <Link href="/activities?category=WAQF_UPDATE">
-                ติดตามความคืบหน้า
+              <Link href="/waqf">
+                รายละเอียดโครงการ
                 <ArrowRight />
               </Link>
             </Button>
