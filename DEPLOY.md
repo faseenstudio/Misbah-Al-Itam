@@ -20,8 +20,9 @@ If you don't know the database password, reset it under Project Settings → Dat
 
 1. Push this repository to GitHub (branch `main` or the branch you want to deploy).
 2. On vercel.com → **Add New… → Project** → import the GitHub repository.
-3. Framework preset: **Next.js** (detected automatically). Leave build settings as they are;
-   Vercel runs the `vercel-build` script.
+3. Framework preset: **Next.js** (detected automatically). Leave build settings as they are:
+   `vercel.json` sets the build command to `npm run vercel-build` (migrations on production, then
+   `next build`). In the Build Logs you should see `[vercel-build] production: applying migrations`.
 4. Add **Environment Variables** (tick *Production*; also *Preview* if you want previews to work):
 
    | Name | Value |
