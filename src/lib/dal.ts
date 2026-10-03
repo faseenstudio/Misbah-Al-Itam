@@ -12,6 +12,9 @@ export const DONATION_REVIEWER_ROLES: readonly Role[] = ["SUPER_ADMIN", "ADMIN"]
 /** Roles allowed to manage activities, news and project pages. */
 export const CONTENT_EDITOR_ROLES: readonly Role[] = ["SUPER_ADMIN", "ADMIN", "EDITOR"];
 
+/** Roles allowed to add, edit and remove admin accounts. */
+export const USER_MANAGER_ROLES: readonly Role[] = ["SUPER_ADMIN"];
+
 /**
  * The signed-in admin, re-checked against the database on every request so a
  * deactivated account or changed role takes effect immediately (the JWT alone can't).
