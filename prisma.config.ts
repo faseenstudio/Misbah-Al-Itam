@@ -10,6 +10,11 @@ export default defineConfig({
   datasource: {
     // Migrations need a direct (session) connection; the app itself uses the pooled
     // DATABASE_URL at runtime. Falls back to DATABASE_URL for local development.
-    url: process.env.DIRECT_URL || process.env.DATABASE_URL,
+    // POSTGRES_* are the names the Supabase ↔ Vercel integration creates.
+    url:
+      process.env.DIRECT_URL ||
+      process.env.POSTGRES_URL_NON_POOLING ||
+      process.env.DATABASE_URL ||
+      process.env.POSTGRES_PRISMA_URL,
   },
 });
