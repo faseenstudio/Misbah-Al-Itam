@@ -53,11 +53,17 @@ explicitly (for a single-server deployment with a persistent disk).
 ## Admin panel
 
 Sign in at `/admin` with the account created by `npm run db:seed` (`SEED_ADMIN_EMAIL` /
-`SEED_ADMIN_PASSWORD`). Change that password before going live.
+`SEED_ADMIN_PASSWORD`). Change that password before going live (**บัญชีของฉัน**).
+
+After that, a `SUPER_ADMIN` manages everyone else under **ผู้ดูแลระบบ** (`/admin/users`): add
+accounts, change roles, reset a forgotten password, deactivate or delete. Nobody can change their
+own role or deactivate/delete themselves, and the last active `SUPER_ADMIN` can't be removed.
+Deactivating or deleting an account signs it out on its next request.
 
 | Role | Can do |
 | --- | --- |
-| `SUPER_ADMIN`, `ADMIN` | Everything: dashboard, e-Slip review (approve / reject / reopen), content |
+| `SUPER_ADMIN` | Everything, including managing admin accounts |
+| `ADMIN` | Dashboard, e-Slip review (approve / reject / reopen), content |
 | `EDITOR` | Dashboard totals, activities / news / Waqf updates, project page — no slips |
 
 **Content:** posts are plain text (a blank line starts a new paragraph). Photos are resized in the

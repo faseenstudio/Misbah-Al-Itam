@@ -5,14 +5,13 @@ import { signOut } from "@/auth";
 import { AdminNav } from "@/components/admin/admin-nav";
 import { LogoMark } from "@/components/site/logo";
 import { getPendingCount } from "@/lib/admin-queries";
-import { DONATION_REVIEWER_ROLES, requireAdmin } from "@/lib/dal";
+import { DONATION_REVIEWER_ROLES, USER_MANAGER_ROLES, requireAdmin } from "@/lib/dal";
+import { ROLE_LABELS } from "@/lib/roles";
 
 export const metadata: Metadata = {
   title: { default: "ระบบผู้ดูแล", template: "%s | ระบบผู้ดูแล" },
   robots: { index: false, follow: false },
 };
-
-const ROLE_LABELS = { SUPER_ADMIN: "ผู้ดูแลสูงสุด", ADMIN: "ผู้ดูแล", EDITOR: "ผู้จัดการเนื้อหา" } as const;
 
 export default async function AdminPanelLayout({ children }: LayoutProps<"/admin">) {
   // Pages re-check authorization themselves; this only needs the admin for the shell.
@@ -37,7 +36,7 @@ export default async function AdminPanelLayout({ children }: LayoutProps<"/admin
             </div>
           </div>
         </div>
-        <AdminNav pendingCount={pendingCount} canReview={canReview} />
+        <AdminNav pendingCount={pendingCount} canReview={canReview} canManageUsers={USER_MANAGER_ROLES.includes(admin.role)} />
         <div className="hidden border-t border-white/10 pt-4 text-sm lg:mt-auto lg:block">
           <p className="font-medium">{admin.name}</p>
           <p className="text-xs text-white/60">{ROLE_LABELS[admin.role]}</p>

@@ -2,11 +2,19 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ExternalLink, House, LayoutDashboard, Newspaper, ReceiptText } from "lucide-react";
+import { ExternalLink, House, LayoutDashboard, Newspaper, ReceiptText, UserRound, UsersRound } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-export function AdminNav({ pendingCount, canReview }: { pendingCount: number; canReview: boolean }) {
+export function AdminNav({
+  pendingCount,
+  canReview,
+  canManageUsers,
+}: {
+  pendingCount: number;
+  canReview: boolean;
+  canManageUsers: boolean;
+}) {
   const pathname = usePathname();
   const items = [
     { href: "/admin", label: "ภาพรวม", icon: LayoutDashboard, active: pathname === "/admin" },
@@ -23,6 +31,10 @@ export function AdminNav({ pendingCount, canReview }: { pendingCount: number; ca
       : []),
     { href: "/admin/activities", label: "กิจกรรมและข่าวสาร", icon: Newspaper, active: pathname.startsWith("/admin/activities") },
     { href: "/admin/projects", label: "โครงการบ้านตะเกียง", icon: House, active: pathname.startsWith("/admin/projects") },
+    ...(canManageUsers
+      ? [{ href: "/admin/users", label: "ผู้ดูแลระบบ", icon: UsersRound, active: pathname.startsWith("/admin/users") }]
+      : []),
+    { href: "/admin/account", label: "บัญชีของฉัน", icon: UserRound, active: pathname.startsWith("/admin/account") },
   ];
 
   return (

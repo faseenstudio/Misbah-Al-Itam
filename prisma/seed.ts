@@ -46,7 +46,8 @@ async function main() {
     },
   });
 
-  const email = process.env.SEED_ADMIN_EMAIL;
+  // Sign-in lowercases the email, so store it that way too.
+  const email = process.env.SEED_ADMIN_EMAIL?.trim().toLowerCase();
   const password = process.env.SEED_ADMIN_PASSWORD;
   if (email && password) {
     await prisma.user.upsert({
