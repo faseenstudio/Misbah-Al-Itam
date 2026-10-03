@@ -34,6 +34,10 @@ If you don't know the database password, reset it under Project Settings → Dat
    | `SUPABASE_SERVICE_ROLE_KEY` | the secret key — **never** prefix with `NEXT_PUBLIC_` |
 
    Do **not** set `AUTH_URL` or `SLIP_STORAGE` on Vercel.
+
+   **Using the Supabase ↔ Vercel integration instead?** It creates `POSTGRES_PRISMA_URL`,
+   `POSTGRES_URL_NON_POOLING`, `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SECRET_KEY`; the app
+   falls back to those automatically, so you only need to add `AUTH_SECRET` yourself.
 5. Click **Deploy**.
 
 The production build runs `prisma migrate deploy` (creating all tables, with Row Level Security

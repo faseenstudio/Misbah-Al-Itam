@@ -20,8 +20,9 @@ let supabase: SupabaseClient | null | undefined;
 
 function getSupabase(): SupabaseClient | null {
   if (supabase !== undefined) return supabase;
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  // Fallbacks are the names the Supabase ↔ Vercel integration creates.
+  const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY;
   if (url && key) {
     supabase = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
   } else if (process.env.NODE_ENV === "production" && process.env.SLIP_STORAGE !== "local") {
